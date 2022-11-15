@@ -1,0 +1,21 @@
+{% extends 'index.html' %}
+{% block content %}
+<section id="register">
+    <div class="container h-100">
+        <div class="row h-100">
+            <div class="col-md-5 register-tagline my-auto">
+                <h1>REGISTER</h1>
+                <p>Isi data anda dengan benar</p>
+                <form method="POST" id="form">
+                    {{ form.hidden_tag() }}
+                    {{ form.fullname(class="form-control input-login mt-3", id="fullname",placeholder="Full Name") }}
+                    {{ form.username(class="form-control input-login mt-3", id="username",placeholder="Username") }}
+                    {{ form.email(class="form-control input-login mt-3", id="email",placeholder="E-mail") }}
+                    {{ form.password(class="form-control input-login mt-3", id="password",placeholder="Password") }}
+                    {{ form.submit(class="button-login mt-3", id="submit",placeholder="REGISTER") }}
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

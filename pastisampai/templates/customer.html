@@ -1,0 +1,65 @@
+{% extends 'index.html' %}
+{% block content %}
+<section id="account">
+    <div class="container h-100">
+        <div class="row h-100">
+            <div class="col-md-12 account-tagline my-auto">
+                <h1>ACCOUNT</h1>
+                <p>Selamat datang kembali <span class="fw-bold">{{ current_user.username }}</span></p>
+                
+                <div class="table-account">
+                    <div class="col-md-2 text-center account-border">
+                        <div class="judul">
+                            <p>Full Name</p>
+                        </div>
+                    </div>
+                    <div class="col-md-5 text-center">
+                        <div class="isi">
+                            <p>{{ current_user.fullname }}</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="table-account">
+                    <div class="col-md-2 text-center account-border">
+                        <div class="judul">
+                            <p>Username</p>
+                        </div>
+                    </div>
+                    <div class="col-md-5 text-center">
+                        <div class="isi">
+                            <p>{{ current_user.username }}</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="table-account">
+                    <div class="col-md-2 text-center account-border">
+                        <div class="judul">
+                            <p>E-mail</p>
+                        </div>
+                    </div>
+                    <div class="col-md-5 text-center">
+                        <div class="isi">
+                            <p>{{ current_user.email_address }}</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="table-account">
+                    <div class="col-md-2 text-center account-border">
+                        <div class="judul">
+                            <p>Password</p>
+                        </div>
+                    </div>
+                    <div class="col-md-5 text-center">
+                        <div class="isi">
+                            <p type="password">******</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

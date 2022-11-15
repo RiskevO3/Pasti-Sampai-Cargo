@@ -1,0 +1,19 @@
+{% extends 'index.html' %}
+{% block content %}
+<section id="login">
+    <div class="container h-100">
+        <div class="row h-100">
+            <div class="col-md-5 login-tagline my-auto">
+                <h1>LOGIN</h1>
+                <p>Silahkan login terlebih dahulu</p>
+                <form method="POST">
+                    {{ form.hidden_tag() }}
+                    {{ form.username(class="form-control input-login mt-3",placeholder="Username")}}
+                    {{ form.password(class="form-control input-login mt-3",placeholder="Password")}}
+                    {{form.submit(class="button-login mt-3")}}
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

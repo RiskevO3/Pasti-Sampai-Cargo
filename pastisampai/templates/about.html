@@ -1,0 +1,46 @@
+{% extends 'index.html' %}
+{% block content %}
+<section id="about">
+    <div class="container fluid h-100">
+        <div class="row">
+            <div class="col-md-6">
+               <h1>Tentang Kami</h1>
+               <h6><span class="fw-bold">Pasti Sampai Express</span> menyediakan layanan jasa logistik yang menjangkau seluruh pulau Jawa dengan dukungan ekosistem yang lengkap. Harapan kami, Pasti Sampai Express dapat menciptakan lapangan kerja untuk mendorong perekonomian nasional.</h6>
+               <div class="kontak">
+                    <h1>Kontak</h1>
+                    <div class="mb-3 d-flex align-items-center">
+                        <div>
+                            <img src="{{url_for ('static',filename='/Assets/img/alamat.png') }}" alt="">
+                        </div>
+                        <a href="#">Ciganitri Indah Residence No C.16, Cipagalo, Bojongsoang, Bandung, Jawa Barat 40287</a>
+                    </div>
+                    <div class="mb-3 d-flex align-items-center">
+                        <div>
+                            <img src="{{url_for('static',filename='/Assets/img/email.png')}}" alt="">
+                        </div>
+                        <a href="#">Pastisampaiexpress@gmail.com</a>
+                    </div>
+                    <div class="mb-3 d-flex align-items-center">
+                        <div>
+                            <img src="{{url_for('static',filename='/Assets/img/tlp.png')}}" alt="">
+                        </div>
+                        <a href="#">081225510099</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card-about w-100">
+                    <h1 class="text-center">Cari Drop Point</h1>
+                    <div class="about-search">
+                        <input type="text" class="input-about" id="exampleInputEmail1" placeholder="Masukkan Nama Kota">
+                        <button class="search-button" type="button"><img src="{{url_for('static',filename='/Assets/img/search.png')}}" alt=""></button>
+                    </div>
+                    <div class="card-about-output mt-4">
+                        <!-- output -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
