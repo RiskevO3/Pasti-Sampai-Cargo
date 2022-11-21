@@ -117,9 +117,21 @@ def confirm_page():
         if form.errors != {}:
             for err_msg in form.errors.values():
                 flash(f'There was an error with searching a resi: {err_msg}', category='danger')
-        return render_template('confirm.html',data=data,form_username=form)
+        return render_template('confirm.html',data=data,form=form)
     flash('you cant access this page directly!',category='danger')
     return redirect(url_for('home_page'))
+
+@app.route('/check_username',methods=['POST'])
+@login_required
+def check_username():
+    if current_user.roles == 'admin':
+        username = User.query.filter_by(username=request.form.get('username')).first()
+        if not username:
+            username_type = request.form.get('type_username')
+            if username_type == 'username_d':
+                return (f'username untuk pengirim tidak ada!',400)
+            return(f'username untuk penerima tidak ada!',400)
+        return ('username terdaftar!',200)
 
 @app.route('/update',methods=['POST','GET'])
 @login_required
@@ -131,10 +143,12 @@ def update_page():
             user.time_on_update = form.tanggal.data
             user.arrived_at = form.arrived_at.data
             db.session.commit()
-            flash(f'success,update pada no resi {form.noresi.data} berhasil!',category='success')
+            return (f'success,update pada no resi {form.noresi.data} berhasil!',200)
         if form.errors != {}:
+            l_err = []
             for err_msg in form.errors.values():
-                flash(f'There was an error with searching a resi: {err_msg}', category='danger')
+                l_err.append(f'There was an error with searching a resi: {err_msg}')
+            return(l_err,400)
         return render_template('update.html',form=form)
     flash('Youre not and admin!',category='danger')
     return redirect(url_for('account_info'))

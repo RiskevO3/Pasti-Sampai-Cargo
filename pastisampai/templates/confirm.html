@@ -11,7 +11,7 @@
 
                         <!-- Bagian Utama -->
                         <form method="POST">
-                            {{form_username.hidden_tag()}}
+                            {{form.hidden_tag()}}
                             <!-- Bagian Output Biaya Pengiriman -->
                             <div class="table-confirm">
                                 <!-- Bagian Judul -->
@@ -22,7 +22,7 @@
                                 </div>
                                 <!-- Bagian Output -->
                                 <div class="col-md-4">
-                                    <div class="isi">
+                                    <div class="isi",name='{{data["no_resi"]}}'>
                                         <p>Rp.{{data['ongkir']}}</p><!-- Output Disini -->
                                     </div>
                                 </div>
@@ -38,7 +38,7 @@
                                 </div>
                                 <!-- Bagian Form -->
                                 <div class="col-md-4">
-                                    {{form_username.username_d(class='form-control')}}
+                                    {{form.username_d(class='form-control',id='username_d',onchange='checkUsername([id,value])')}}
                                 </div>
                             </div>
 
@@ -52,13 +52,13 @@
                                 </div>
                                 <!-- Bagian Form -->
                                 <div class="col-md-4">
-                                    {{form_username.username_r(class='col-md-4 form-control')}}
+                                    {{form.username_r(class='col-md-4 form-control',id = 'username_r',onchange='checkUsername([id,value])')}}
                                 </div>
                             </div>
 
                             <!-- Button Submit -->
                             <div class="col-md-7">
-                                {{form_username.submit(class='button-confirm')}}
+                                {{form.submit(id='submitform',class='button-confirm')}}
                             </div>
                         </form>
                     </div>
