@@ -17,10 +17,11 @@ def about_page():
         kabkotaName = f'%{form.searchCity.data}%'
         city = Kota.query.filter(Kota.kabkota_name.like(kabkotaName)).all()
         if city:
-            data = city
-        else:
-            data = ['none','droppoint didaerah ini belum ada.']
-        return render_template('about.html',form=form,data=data)
+            l_city = []
+            for citie in city:
+                l_city.append(citie.to_dict())
+            return (l_city,200)
+        return ('Kota yang anda cari tidak ada!',400)
     return render_template('about.html',form=form)
 
 @app.route('/services',methods = ["GET","POST"])
@@ -55,8 +56,6 @@ def register_page():
     if form.errors != {}: #If there are not errors from the validations
         for err_msg in form.errors.values():
             flash(f'There was an error with creating a user: {err_msg}', category='danger')
-
-
     return render_template('register.html',form=form)
 
 @app.route('/dashboard',methods=["GET","POST"])
@@ -98,6 +97,7 @@ def dashboard_admin_page():
     return redirect(url_for('account_info'))
 
 @app.route('/confirm',methods=['GET','POST'])
+@login_required
 def confirm_page():
     if 'data' in session:
         form = addUsername()

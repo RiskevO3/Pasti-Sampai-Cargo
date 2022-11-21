@@ -9,6 +9,7 @@ import random
 def load_user(user_id):
     return User.query.get(int(user_id))
 
+user_resi = db.Table('user_resi',db.Column('user_id',db.Integer(),db.ForeignKey('user.id')),db.Column('resi_id',db.Integer(),db.ForeignKey('resi.id')))
 
 def generate_resi():
     resis = Resi.query.all()
@@ -32,14 +33,7 @@ def get_city():
         list_city.append((kota.city_id,kota.city_name))
     return list_city
 
-user_resi = db.Table(
-'user_resi',
-db.Column('user_id',db.Integer(),db.ForeignKey('user.id')),
-db.Column('resi_id',db.Integer(),db.ForeignKey('resi.id'))
-)
-
 class User(db.Model, UserMixin):
-
     id = db.Column(db.Integer(), primary_key=True)
     roles = db.Column(db.String(length=30),nullable=False)
     username = db.Column(db.String(length=30), nullable=False, unique=True)
@@ -47,19 +41,14 @@ class User(db.Model, UserMixin):
     email_address = db.Column(db.String(length=50), nullable=False)
     password_hash = db.Column(db.String(length=60), nullable=False)
     resi = db.relationship('Resi',secondary=user_resi,backref='users')
-
-
     @property
     def password(self):
         return self.password
-
     @password.setter
     def password(self, plain_text_password):
         self.password_hash = bcrypt.generate_password_hash(plain_text_password).decode('utf-8')
-
     def check_password_correction(self, attempted_password):
         return bcrypt.check_password_hash(self.password_hash, attempted_password)
-
 
 class Resi(db.Model):
     id = db.Column(db.Integer(),primary_key=True)
@@ -84,13 +73,14 @@ class Kota(db.Model):
     kabkota_name = db.Column(db.String(length=30),nullable=False)
     address = db.Column(db.String(length=60),nullable=False)
     kodePos = db.Column(db.String(length=30),nullable=False)
+    def to_dict(self):
+        return {'address':self.address,'kabkota_name':self.kabkota_name,'kodePos':self.kodePos,'cabang_name':self.cabang_name}
 
 
 class Kota_Ongkir(db.Model):
     id =db.Column(db.Integer(),primary_key=True)
     city_id = db.Column(db.String(length=30),nullable=False)
     city_name = db.Column(db.String(length=30),nullable=False)
-
     def cekongkir(self,tujuan,berat):
         berat = berat * 1000
         conn = http.client.HTTPSConnection("api.rajaongkir.com")
@@ -108,11 +98,9 @@ class Kota_Ongkir(db.Model):
             return data
         return 10000*(berat/1000)
 
-    
 
 
-
-b = User(username='bbb',roles='user',fullname='bbb',email_address='bbb',password='bbb')
-e = User(username='eee',roles='user',fullname='eee',email_address='eee',password='eee')
-c = Resi(no_resi=120223212,sender_n='sumanto',receiver_n='sutrisno',origin_n='jl.bojongsoang',destination_n='jl.kantor baru',type_of_packet='baju',type_of_service='reguler',sender_pn=628123,receiver_pn=62847221,weight_packet='2.4kg',arrived_at='bali',time_on_update='12.44 selasa 16/11/22',time_on_deliver='16/11/22',ongkir='12000')
-d = Resi(no_resi=120223213,sender_n='sutrisno',receiver_n='habibi',origin_n='jl.sedrisna',destination_n='jl.kertajaya',type_of_packet='baju',type_of_service='reguler',sender_pn=628123,receiver_pn=62847221,weight_packet='2.4kg',arrived_at='bali',time_on_update='12.44 selasa 16/11/22',time_on_deliver='16/11/22',ongkir='12000')
+# b = User(username='bbb',roles='user',fullname='bbb',email_address='bbb',password='bbb')
+# e = User(username='eee',roles='user',fullname='eee',email_address='eee',password='eee')
+# c = Resi(no_resi=120223212,sender_n='sumanto',receiver_n='sutrisno',origin_n='jl.bojongsoang',destination_n='jl.kantor baru',type_of_packet='baju',type_of_service='reguler',sender_pn=628123,receiver_pn=62847221,weight_packet='2.4kg',arrived_at='bali',time_on_update='12.44 selasa 16/11/22',time_on_deliver='16/11/22',ongkir='12000')
+# d = Resi(no_resi=120223213,sender_n='sutrisno',receiver_n='habibi',origin_n='jl.sedrisna',destination_n='jl.kertajaya',type_of_packet='baju',type_of_service='reguler',sender_pn=628123,receiver_pn=62847221,weight_packet='2.4kg',arrived_at='bali',time_on_update='12.44 selasa 16/11/22',time_on_deliver='16/11/22',ongkir='12000')

@@ -18,13 +18,6 @@
                 <!-- Bagian Output -->
                 <div class="tracking-output overflow-auto mt-3">
                     <p id="trackingresult">
-                        {% if data %}
-                            {% if data.arrived_at and data.time_on_update %}
-                                {{data.arrived_at}} | {{data.time_on_update}}
-                            {% else %}
-                                {{data}}
-                            {% endif %}
-                        {% endif %}
                     </p>   
                 </div>
             </div>
@@ -36,7 +29,7 @@
 <script>
     $(document).ready(function() {
         $('form').submit(function (e) {
-            var url = "{{ url_for('tracking_page') }}"; // send the form data here.
+            let url = "{{ url_for('tracking_page') }}"; // send the form data here.
             $.ajax({
                 type: "POST",
                 url: url,
