@@ -1,4 +1,4 @@
-from flask import redirect, render_template,request,url_for,flash,session
+from flask import redirect, render_template,request,url_for,flash,session,jsonify
 from pastisampai import app,db
 from pastisampai.models import User,Resi,Kota,Kota_Ongkir,get_date,generate_resi
 from pastisampai.forms import RegisterForm,LoginForm,dropPointForm,checkResiForm,updateResiForm,addNewOrder,addUsername
@@ -151,7 +151,19 @@ def tracking_page():
                 data = {'arrived_at':noresi.arrived_at,'time_on_update':noresi.time_on_update}
             else:
                 data = 'noresi tidak ada!'
-            return render_template('tracking.html',data=data,form=form)
+            return (data,200)
         return render_template('tracking.html',form=form)
     flash('Youre not and admin!',category='danger')
     return redirect(url_for('account_info'))
+
+
+@app.route('/cekresi',methods=['POST'])
+@login_required
+def cek_resi():
+    if current_user.roles == 'admin':
+        resi = Resi.query.filter_by(no_resi=int(request.form.get('resi'))).first()
+        if not resi:
+            return ('resi tidak terdaftar!',200)
+        return 400
+    return 400
+

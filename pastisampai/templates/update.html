@@ -12,16 +12,39 @@
                 <form method="POST">
                     <!-- Input No Resi -->
                     {{form.hidden_tag()}}
-                    {{form.noresi(class='form-control input-update mt-3',placeholder='No Resi')}}
+                    {{form.noresi(onchange="cekResi()",class='form-control input-update mt-3',placeholder='No Resi',id='resi')}}
                     <!-- Input Tanggal Terbaru -->
                     {{form.tanggal(class='form-control input-update mt-3',placeholder='Tanggal')}}
                     <!-- Input Lokasi Terbaru -->
                     {{form.arrived_at(class='form-control input-update mt-3',placeholder='Lokasi Terkini')}}
                     <!-- Button Submit -->
-                    {{form.submit(class='button-update mt-3')}}
+                    {{form.submit(class='button-update-disabled mt-3',disabled=True,id='submitform')}}
                 </form>
             </div>
         </div>
     </div>
 </section>
+{% endblock %}
+{% block script %}
+<script>
+    function cekResi(){
+        resi = parseInt(document.getElementById('resi').value)
+        let url = "{{ url_for('cek_resi') }}"; // send the form data here.
+        submitform = document.getElementById('submitform')
+            $.ajax({
+                type: "POST",
+                url: url,
+                data: {'resi':resi},
+                success: function (data) {
+                    submitform.disabled = true
+                    $("#submitform").attr('class', 'button-update-disabled mt-3');
+                    toastr.error(data)// display the returned data in the console.
+                },
+                error: function(){
+                    $("#submitform").attr('class', 'button-update mt-3');
+                    submitform.disabled = false                
+                }
+            });
+    }
+</script>
 {% endblock %}

@@ -401,6 +401,16 @@ body{
     font-weight: 700;
 }
 
+.button-update-disabled {
+    width: 100%;
+    height: 74px;
+    background-color: #bab8b4;
+    color: var(--pr-color);
+    border: none;
+    font-size: 20px;
+    font-weight: 700;
+}
+
 /* Tracking Section */
 
 #tracking {

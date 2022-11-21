@@ -6,7 +6,6 @@
             <div class="col-md-12 dashboard-tagline my-auto">
                 <h1>TRACKING</h1>
                 <p>Cek lokasi terkini paket anda</p>
-
                 <div class="table-head">
                     <div class="col-md-1 text-center dashboard-border">
                         <div class="no">
@@ -30,6 +29,7 @@
                     </div>
                 </div>
                 {% if resis %}
+                <div class="table-wrapper-scroll-y my-custom-scrollbar">
                 {% for resi in resis %}
                 <div class="table-dashboard">
                     <div class="col-md-1 text-center dashboard-border">
@@ -55,6 +55,7 @@
                 </div>
                 {% endfor %}
                 {% else %}
+                
                 <div class="table-dashboard">
                     <div class="col-md-1 text-center dashboard-border">
                         <div class="no">
