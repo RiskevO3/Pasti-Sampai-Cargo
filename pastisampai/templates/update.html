@@ -1,0 +1,27 @@
+{% extends 'index.html' %}
+{% block content %}
+<section id="update">
+    <div class="container h-100">
+        <div class="row h-100">
+            <div class="col-md-6 update-tagline my-auto">
+                <!-- Bagian Tagline -->
+                <h1>UPDATE LOCATION</h1>
+                <p>Isi form dibawah dengan benar!</p>
+
+                <!-- Bagian Utama -->
+                <form method="POST">
+                    <!-- Input No Resi -->
+                    {{form.hidden_tag()}}
+                    {{form.noresi(class='form-control input-update mt-3',placeholder='No Resi')}}
+                    <!-- Input Tanggal Terbaru -->
+                    {{form.tanggal(class='form-control input-update mt-3',placeholder='Tanggal')}}
+                    <!-- Input Lokasi Terbaru -->
+                    {{form.arrived_at(class='form-control input-update mt-3',placeholder='Lokasi Terkini')}}
+                    <!-- Button Submit -->
+                    {{form.submit(class='button-update mt-3')}}
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

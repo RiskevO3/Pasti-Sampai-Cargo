@@ -7,121 +7,59 @@
                 <h1>TRACKING</h1>
                 <p>Cek lokasi terkini paket anda</p>
 
-                <div class="table-head">
-                    <div class="col-md-1 text-center dashboard-border">
-                        <div class="no">
-                            <p>NO</p>
-                        </div>
-                    </div>
-                    <div class="col-md-3 text-center dashboard-border">
-                        <div class="resi">
-                            <p>NOMOR RESI</p>
-                        </div>
-                    </div>
-                    <div class="col-md-3 text-center dashboard-border">
-                        <div class="tanggal">
-                            <p>TANGGAL</p>
-                        </div>
-                    </div>
-                    <div class="col-md-4 text-center">
-                        <div class="lokasi">
-                            <p>LOKASI TERKINI</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="table-dashboard">
-                    <div class="col-md-1 text-center dashboard-border">
-                        <div class="no">
-                            <p></p>
-                        </div>
-                    </div>
-                    <div class="col-md-3 text-center dashboard-border">
-                        <div class="resi">
-                            <p></p>
-                        </div>
-                    </div>
-                    <div class="col-md-3 text-center dashboard-border">
-                        <div class="tanggal">
-                            <p></p>
-                        </div>
-                    </div>
-                    <div class="col-md-4 text-center">
-                        <div class="lokasi">
-                            <p></p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="table-dashboard">
-                    <div class="col-md-1 text-center dashboard-border">
-                        <div class="no">
-                            <p></p>
-                        </div>
-                    </div>
-                    <div class="col-md-3 text-center dashboard-border">
-                        <div class="resi">
-                            <p></p>
-                        </div>
-                    </div>
-                    <div class="col-md-3 text-center dashboard-border">
-                        <div class="tanggal">
-                            <p></p>
-                        </div>
-                    </div>
-                    <div class="col-md-4 text-center">
-                        <div class="lokasi">
-                            <p></p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="table-dashboard">
-                    <div class="col-md-1 text-center dashboard-border">
-                        <div class="no">
-                            <p></p>
-                        </div>
-                    </div>
-                    <div class="col-md-3 text-center dashboard-border">
-                        <div class="resi">
-                            <p></p>
-                        </div>
-                    </div>
-                    <div class="col-md-3 text-center dashboard-border">
-                        <div class="tanggal">
-                            <p></p>
-                        </div>
-                    </div>
-                    <div class="col-md-4 text-center">
-                        <div class="lokasi">
-                            <p></p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="table-dashboard">
-                    <div class="col-md-1 text-center dashboard-border">
-                        <div class="no">
-                            <p></p>
-                        </div>
-                    </div>
-                    <div class="col-md-3 text-center dashboard-border">
-                        <div class="resi">
-                            <p></p>
-                        </div>
-                    </div>
-                    <div class="col-md-3 text-center dashboard-border">
-                        <div class="tanggal">
-                            <p></p>
-                        </div>
-                    </div>
-                    <div class="col-md-4 text-center">
-                        <div class="lokasi">
-                            <p></p>
-                        </div>
-                    </div>
-                </div>
-
+                <table class="table table-dark">
+                    <thead>
+                      <tr>
+                        <th scope="col">No.</th>
+                        <th scope="col">NOMOR RESI</th>
+                        <th scope="col">TANGGAL DIKIRIM</th>
+                        <th scope="col">TUJUAN</th>
+                        <th scope="col">TANGGAL UPDATE</th>
+                        <th scope="col">LOKASI TERKINI</th>
+                      </tr>
+                    </thead>
+                {% if resis %}
+                    <tbody>
+                {% for resi in resis %}
+                        <tr>
+                        <th scope="row">{{loop.index}}</th>
+                        <td>{{resi.no_resi}}</td>
+                        <td>{{resi.time_on_deliver}}</td>
+                        <td>{{resi.destination_n}}</td>
+                        <td>{{resi.time_on_update}}</td>
+                        <td>{{resi.arrived_at}}</td>
+                        </tr>
+                {% endfor %}
+                    </tbody>
+                {% else %}
+                    <tbody>
+                        <tr>
+                        <th scope="row">1</th>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        </tr>
+                        <tr>
+                        <th scope="row">2</th>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        </tr>
+                        <tr>
+                        <th scope="row">3</th>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+                {% endif %}
             </div>
         </div>
     </div>

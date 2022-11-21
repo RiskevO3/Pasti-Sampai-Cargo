@@ -1,0 +1,68 @@
+{% extends 'index.html' %}
+{% block content %}
+        <!-- Confirmt Section-->
+        <section id="confirm">
+            <div class="container h-100">
+                <div class="row h-100">
+                    <div class="col-md-12 confirm-tagline my-auto">
+                        <!-- Bagian Tagline -->
+                        <h1>CONFIRM ORDER</h1>
+                        <p>Konfirmasi Order ketika customer sudah membayar!</p>
+
+                        <!-- Bagian Utama -->
+                        <form method="POST">
+                            {{form_username.hidden_tag()}}
+                            <!-- Bagian Output Biaya Pengiriman -->
+                            <div class="table-confirm">
+                                <!-- Bagian Judul -->
+                                <div class="col-md-3 text-center confirm-border">
+                                    <div class="judul">
+                                        <p>Biaya Pengiriman</p>
+                                    </div>
+                                </div>
+                                <!-- Bagian Output -->
+                                <div class="col-md-4">
+                                    <div class="isi">
+                                        <p>Rp.{{data['ongkir']}}</p><!-- Output Disini -->
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Bagian Input Username Pengirim -->
+                            <div class="table-confirm">
+                                <!-- Bagian Judul -->
+                                <div class="col-md-3 text-center confirm-border">
+                                    <div class="judul">
+                                        <p>Username Pengirim</p>
+                                    </div>
+                                </div>
+                                <!-- Bagian Form -->
+                                <div class="col-md-4">
+                                    {{form_username.username_d(class='form-control')}}
+                                </div>
+                            </div>
+
+                            <!-- Bagian Input Username Penerima -->
+                            <div class="table-confirm">
+                                <!-- Bagian Judul -->
+                                <div class="col-md-3 text-center confirm-border">
+                                    <div class="judul">
+                                        <p>Username Penerima</p>
+                                    </div>
+                                </div>
+                                <!-- Bagian Form -->
+                                <div class="col-md-4">
+                                    {{form_username.username_r(class='col-md-4 form-control')}}
+                                </div>
+                            </div>
+
+                            <!-- Button Submit -->
+                            <div class="col-md-7">
+                                {{form_username.submit(class='button-confirm')}}
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+{% endblock %}

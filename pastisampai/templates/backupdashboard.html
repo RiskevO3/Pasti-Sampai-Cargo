@@ -1,0 +1,129 @@
+{% extends 'index.html' %}
+{% block content %}
+<section id="dashboard">
+    <div class="container h-100">
+        <div class="row h-100">
+            <div class="col-md-12 dashboard-tagline my-auto">
+                <h1>TRACKING</h1>
+                <p>Cek lokasi terkini paket anda</p>
+
+                <div class="table-head">
+                    <div class="col-md-1 text-center dashboard-border">
+                        <div class="no">
+                            <p>NO</p>
+                        </div>
+                    </div>
+                    <div class="col-md-3 text-center dashboard-border">
+                        <div class="resi">
+                            <p>NOMOR RESI</p>
+                        </div>
+                    </div>
+                    <div class="col-md-3 text-center dashboard-border">
+                        <div class="tanggal">
+                            <p>TANGGAL</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4 text-center">
+                        <div class="lokasi">
+                            <p>LOKASI TERKINI</p>
+                        </div>
+                    </div>
+                </div>
+                {% if resis %}
+                {% for resi in resis %}
+                <div class="table-dashboard">
+                    <div class="col-md-1 text-center dashboard-border">
+                        <div class="no">
+                            <p>{{ loop.index }}</p>
+                        </div>
+                    </div>
+                    <div class="col-md-3 text-center dashboard-border">
+                        <div class="resi">
+                            <p>{{resi.no_resi}}</p>
+                        </div>
+                    </div>
+                    <div class="col-md-3 text-center dashboard-border">
+                        <div class="tanggal">
+                            <p>{{resi.time_on_update}}</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4 text-center">
+                        <div class="lokasi">
+                            <p>{{resi.arrived_at}}</p>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+                {% else %}
+                <div class="table-dashboard">
+                    <div class="col-md-1 text-center dashboard-border">
+                        <div class="no">
+                            <p></p>
+                        </div>
+                    </div>
+                    <div class="col-md-3 text-center dashboard-border">
+                        <div class="resi">
+                            <p></p>
+                        </div>
+                    </div>
+                    <div class="col-md-3 text-center dashboard-border">
+                        <div class="tanggal">
+                            <p></p>
+                        </div>
+                    </div>
+                    <div class="col-md-4 text-center">
+                        <div class="lokasi">
+                            <p></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="table-dashboard">
+                    <div class="col-md-1 text-center dashboard-border">
+                        <div class="no">
+                            <p></p>
+                        </div>
+                    </div>
+                    <div class="col-md-3 text-center dashboard-border">
+                        <div class="resi">
+                            <p></p>
+                        </div>
+                    </div>
+                    <div class="col-md-3 text-center dashboard-border">
+                        <div class="tanggal">
+                            <p></p>
+                        </div>
+                    </div>
+                    <div class="col-md-4 text-center">
+                        <div class="lokasi">
+                            <p></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="table-dashboard">
+                    <div class="col-md-1 text-center dashboard-border">
+                        <div class="no">
+                            <p></p>
+                        </div>
+                    </div>
+                    <div class="col-md-3 text-center dashboard-border">
+                        <div class="resi">
+                            <p></p>
+                        </div>
+                    </div>
+                    <div class="col-md-3 text-center dashboard-border">
+                        <div class="tanggal">
+                            <p></p>
+                        </div>
+                    </div>
+                    <div class="col-md-4 text-center">
+                        <div class="lokasi">
+                            <p></p>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

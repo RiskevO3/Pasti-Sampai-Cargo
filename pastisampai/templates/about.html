@@ -10,19 +10,19 @@
                     <h1>Kontak</h1>
                     <div class="mb-3 d-flex align-items-center">
                         <div>
-                            <img src="{{url_for ('static',filename='/Assets/img/alamat.png') }}" alt="">
+                            <img src="{{url_for('static',filename='Assets/img/alamat.png')}}" alt="">
                         </div>
                         <a href="#">Ciganitri Indah Residence No C.16, Cipagalo, Bojongsoang, Bandung, Jawa Barat 40287</a>
                     </div>
                     <div class="mb-3 d-flex align-items-center">
                         <div>
-                            <img src="{{url_for('static',filename='/Assets/img/email.png')}}" alt="">
+                            <img src="{{url_for('static',filename='Assets/img/email.png')}}" alt="">
                         </div>
                         <a href="#">Pastisampaiexpress@gmail.com</a>
                     </div>
                     <div class="mb-3 d-flex align-items-center">
                         <div>
-                            <img src="{{url_for('static',filename='/Assets/img/tlp.png')}}" alt="">
+                            <img src="{{url_for('static',filename='Assets/img/tlp.png')}}" alt="">
                         </div>
                         <a href="#">081225510099</a>
                     </div>
@@ -31,12 +31,25 @@
             <div class="col-md-6">
                 <div class="card-about w-100">
                     <h1 class="text-center">Cari Drop Point</h1>
+                    <form method="POST">
                     <div class="about-search">
-                        <input type="text" class="input-about" id="exampleInputEmail1" placeholder="Masukkan Nama Kota">
-                        <button class="search-button" type="button"><img src="{{url_for('static',filename='/Assets/img/search.png')}}" alt=""></button>
+                        {{form.hidden_tag()}}
+                        {{form.searchCity(class='input-about',placeholder='Masukkan nama kota')}}
+                        {{form.submit(class='search-button',value='')}}
                     </div>
-                    <div class="card-about-output mt-4">
+                    </form>
+                    <div class="card-about-output mt-4 overflow-auto">
                         <!-- output -->
+                        {% if data %}
+                            {% if data[0] != 'none' %}
+                                {% for i in data %}
+                                    {{loop.index}}. {{i.address}} | {{i.kabkota_name}} | {{i.cabang_name}} | {{i.kodePos}}
+                                    <br><br>
+                                {% endfor %}
+                            {% else %}
+                                {{data[1]}}
+                            {% endif %}
+                        {% endif %}
                     </div>
                 </div>
             </div>

@@ -3,9 +3,10 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
 from flask_login import LoginManager
 
+
 app = Flask(__name__)
 bcrypt = Bcrypt(app)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///market.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///pastisampai.db'
 app.config['SECRET_KEY'] = '749a680b784380e5dbffae5c'
 db = SQLAlchemy(app)
 login_manager = LoginManager(app)

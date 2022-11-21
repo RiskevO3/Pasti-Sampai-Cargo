@@ -1,0 +1,34 @@
+{% extends 'index.html' %}
+{% block content %}
+<section id="tracking">
+    <div class="container h-100">
+        <div class="row h-100">
+            <div class="col-md-6 tracking-tagline my-auto">
+                <!-- Bagian Tagline -->
+                <h1>TRACKING</h1>
+                <p>Isi form dibawah dengan benar!</p>
+
+                <!-- Bagian Input -->
+                <form method="POST" class="tracking-search mb-3">
+                    {{form.hidden_tag()}}
+                    {{form.noresi(class='input-tracking',placeholder='No Resi')}}
+                    {{form.submit(class='search-tracking',value='')}}
+                </form>
+                
+                <!-- Bagian Output -->
+                <div class="tracking-output overflow-auto mt-3">
+                    <p>
+                        {% if data %}
+                            {% if data.arrived_at and data.time_on_update %}
+                                {{data.arrived_at}} | {{data.time_on_update}}
+                            {% else %}
+                                {{data}}
+                            {% endif %}
+                        {% endif %}
+                    </p>   
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

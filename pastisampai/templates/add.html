@@ -1,0 +1,45 @@
+{% extends 'index.html' %}
+{% block content %}
+<section id="add">
+    <div class="container h-100">
+        <div class="row h-100">
+            <!-- Bagian Tagline -->
+            <div class="col-md-12 add-tagline my-auto">
+                <h1>ADD NEW ORDER</h1>
+                <p>Isi form dibawah dengan benar!</p>
+            </div>
+
+            <!-- Bagian Utama -->
+            <div class="col-md-6 my-auto">
+                <form method="POST">
+                    <!-- Input Nama Pengirim -->
+                    {{form.hidden_tag()}}
+                    {{form.sender_n(class='form-control input-add mt-3',placeholder='Nama Pengirim')}}
+                    <!-- Input Nama Penerima -->
+                    {{form.receiver_n(class='form-control input-add mt-3',placeholder='Nama Penerima')}}
+                    <!-- Input Alamat Asal -->
+                    {{form.origin_n(class='form-control input-add mt-3',placeholder='Alamat Asal')}}
+                    {{form.kota_asal(class='form-select input-add mt-3')}}
+                    <!-- Input Jenis Paket -->
+                    {{form.type_of_packet(class='form-control input-add mt-3',placeholder='Jenis Paket')}}
+                    <!-- Input Jenis Layanan -->
+                    {{form.type_of_service(class='form-select input-add mt-3')}}
+            </div>
+            <div class="col-md-6 my-auto">
+                    <!-- Input No HP Pengirim -->
+                    {{form.sender_pn(class='form-control input-add mt-3',placeholder='No HP Pengirim')}}
+                    <!-- Input No HP Penerima -->
+                    {{form.receiver_pn(class='form-control input-add mt-3',placeholder='No HP Penerima')}}
+                    <!-- Input Alamat Tujuan -->
+                    {{form.destination_n(class='form-control input-add mt-3',placeholder='Alamat Tujuan')}}
+                    {{form.kota_tujuan(class='form-select input-add mt-3')}}
+                    <!-- Input Berat -->
+                    {{form.weight_packet(class='form-control input-add mt-3',placeholder='Berat (Kg)')}}
+                    <!-- Button Submit -->
+                    {{form.submit(class='button-add mt-3',value='ADD')}}
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
