@@ -87,7 +87,7 @@ def dashboard_admin_page():
         if form.validate_on_submit():
             kota = Kota_Ongkir.query.filter_by(city_id=form.kota_asal.data).first()
             ongkir = kota.cekongkir(tujuan=form.kota_tujuan.data,berat=int(form.weight_packet.data))
-            newResi = Resi(no_resi=generate_resi(),sender_n=form.sender_n.data,receiver_n=form.receiver_n.data,origin_n=form.origin_n.data,destination_n=form.destination_n.data,type_of_packet=form.type_of_packet.data,type_of_service=form.type_of_service.data,sender_pn=form.sender_pn.data,receiver_pn=form.receiver_pn.data,weight_packet=form.weight_packet.data,arrived_at='baru saja dikirim',time_on_update='baru saja dikirim',time_on_deliver=get_date(),ongkir=ongkir)
+            newResi = Resi(no_resi=generate_resi(),sender_n=form.sender_n.data,receiver_n=form.receiver_n.data,origin_n=form.origin_n.data,destination_n=form.destination_n.data,type_of_packet=form.type_of_packet.data,type_of_service=form.type_of_service.data,sender_pn=form.sender_pn.data,receiver_pn=form.receiver_pn.data,weight_packet=form.weight_packet.data,arrived_at=form.origin_n.data,time_on_update=get_date(),time_on_deliver=get_date(),ongkir=ongkir)
             db.session.add(newResi)
             db.session.commit()
             data = json.dumps({'no_resi':newResi.no_resi,'ongkir':ongkir})
