@@ -106,8 +106,7 @@ class Kota_Ongkir(db.Model):
         if data['rajaongkir']['results'][0]['costs'] != []:
             data = data['rajaongkir']['results'][0]['costs'][0]['cost'][0]['value']
             return data
-        print(10000*(berat/1000))
-        return 1000*(berat/1000)
+        return 10000*(berat/1000)
 
     
 
