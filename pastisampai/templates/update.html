@@ -27,53 +27,18 @@
 {% endblock %}
 {% block script %}
 <script>
-    function cekResi(){
-        resi = parseInt(document.getElementById('resi').value)
-        let url = "{{ url_for('cek_resi') }}"; // send the form data here.
-        submitform = document.getElementById('submitform')
-            $.ajax({
-                type: "POST",
-                url: url,
-                data: {'resi':resi},
-                success: function (data) {
-                    submitform.disabled = true
-                    $("#submitform").attr('class', 'button-update-disabled mt-3');
-                    toastr.error(data)// display the returned data in the console.
-                },
-                error: function(){
-                    $("#submitform").attr('class', 'button-update mt-3');
-                    submitform.disabled = false                
-                }
-            });
+    document.addEventListener("contextmenu", (e) => {
+    e.preventDefault();
+    }, false);
+    document.addEventListener("keydown", (e) => {
+    if (e.ctrlKey || e.keyCode==123) {
+    e.stopPropagation();
+    e.preventDefault();
     }
-    $(document).ready(function() {
-        $('form').submit(function (e) {
-            var url = "{{ url_for('update_page') }}"; // send the form data here.
-            $.ajax({
-                type: "POST",
-                url: url,
-                data: $('form').serialize(), // serializes the form's elements.
-                success: function (data) {
-                    toastr.success(data)
-                },
-                error: function(xhr){
-                    data = xhr.responseJSON
-                    for (let i = 0; i < data.length; i++){
-                        toastr.error(data[i])
-                    }
-                }
-            });
-            e.preventDefault(); // block the traditional submission of the form.
-        });
-
-        // Inject our CSRF token into our AJAX request.
-        $.ajaxSetup({
-            beforeSend: function(xhr, settings) {
-                if (!/^(GET|HEAD|OPTIONS|TRACE)$/i.test(settings.type) && !this.crossDomain) {
-                    xhr.setRequestHeader("X-CSRFToken", "{{ form.csrf_token._value() }}")
-                }
-            }
-        })
     });
+    let scriptElement = document.createElement("script");
+    scriptElement.type = "text/javascript";
+    scriptElement.src = "{{url_for('static',filename='js/update.js')}}";
+    document.body.appendChild(scriptElement);
 </script>
 {% endblock %}

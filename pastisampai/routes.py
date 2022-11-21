@@ -177,7 +177,7 @@ def cek_resi():
     if current_user.roles == 'admin':
         resi = Resi.query.filter_by(no_resi=int(request.form.get('resi'))).first()
         if not resi:
-            return ('resi tidak terdaftar!',200)
-        return 400
+            return ('resi tidak terdaftar!',400)
+        return ('berhasil',200)
     return 400
 
