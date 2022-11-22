@@ -33,14 +33,10 @@ def login_page():
     form = LoginForm()
     if form.validate_on_submit():
         attemptedUser = User.query.filter_by(username=form.username.data).first()
-        if attemptedUser and attemptedUser.check_password_correction(
-                attempted_password=form.password.data
-        ):
+        if attemptedUser and attemptedUser.check_password_correction(attempted_password=form.password.data):
             login_user(attemptedUser)
-            flash(f"Success! sekarang kamu login sebagai {attemptedUser.username}", category='success')
-            return redirect(url_for('account_info'))
-        else:
-            flash('Username atau password salah!, harap coba kembali', category='danger')
+            return(f"Success! sekarang kamu login sebagai {attemptedUser.username}", 200)
+        return('Username atau password salah!, harap coba kembali', 400)
     return render_template('login.html',form=form)
 
 @app.route('/register',methods = ["GET","POST"])
@@ -51,11 +47,12 @@ def register_page():
         db.session.add(userToCreate)
         db.session.commit()
         login_user(userToCreate)
-        flash(f"Akun berhasil dibuat! sekarang kamu login sebagai {userToCreate.username}", category='success')
-        return redirect(url_for('dashboard_page'))
+        return(f"Akun berhasil dibuat! sekarang kamu login sebagai {userToCreate.username}", 200)
     if form.errors != {}: #If there are not errors from the validations
+        l_err = []
         for err_msg in form.errors.values():
-            flash(f'There was an error with creating a user: {err_msg}', category='danger')
+            l_err.append(f'Ada kesalahan ketika membuat akun: {err_msg[0]}')
+        return (l_err,400)
     return render_template('register.html',form=form)
 
 @app.route('/dashboard',methods=["GET","POST"])

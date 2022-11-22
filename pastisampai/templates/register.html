@@ -19,3 +19,15 @@
     </div>
 </section>
 {% endblock %}
+{% block script %}
+<script>
+    let register_page = '{{url_for("register_page")}}'
+    let account_info = '{{url_for("account_info")}}'
+</script>
+<script>
+    let scriptElement = document.createElement('script')
+    scriptElement.type = 'text/javascript'
+    scriptElement.src = '{{url_for("static",filename="js/register.js")}}'
+    document.body.appendChild(scriptElement)
+</script>
+{% endblock %}

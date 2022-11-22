@@ -48,5 +48,5 @@ $(document).ready(function() {
                 xhr.setRequestHeader("X-CSRFToken", "{{ form.csrf_token._value() }}")
             }
         }
-    })
+    });
 });

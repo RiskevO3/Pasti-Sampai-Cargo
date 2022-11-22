@@ -28,24 +28,14 @@
                                 </tr>
                                 {% endfor %}
                                 {% else %}
+                                {% for i in range(8) %}
                                 <tr>
-                                    <th scope="row"></th>
+                                    <th scope="row">{{loop.index}}</th>
                                     <td></td>
                                     <td></td>
                                     <td></td>
                                 </tr>
-                                <tr>
-                                    <th scope="row"></th>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                </tr>
-                                <tr>
-                                    <th scope="row"></th>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                </tr>
+                                {% endfor %}
                                 {% endif %}
                                 </tbody>
                             </table>

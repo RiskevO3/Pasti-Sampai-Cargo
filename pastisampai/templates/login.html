@@ -17,3 +17,15 @@
     </div>
 </section>
 {% endblock %}
+{% block script %}
+<script>
+    const login_page = '{{url_for("login_page")}}'
+    const account_info = '{{url_for("account_info")}}'
+</script>
+<script>
+    let scriptElement = document.createElement('script')
+    scriptElement.type = 'text/javascript'
+    scriptElement.src = '{{url_for("static",filename="js/login.js")}}'
+    document.body.appendChild(scriptElement)
+</script>
+{% endblock %}
