@@ -72,4 +72,5 @@ class addUsername(FlaskForm):
 
     username_r = StringField(label = 'Nama Penerima',validators=[DataRequired()])
     username_d = StringField(label = 'Nama Pengirim',validators=[DataRequired()])
+    no_resi = IntegerField()
     submit = SubmitField()

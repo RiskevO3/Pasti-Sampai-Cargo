@@ -22,7 +22,7 @@
                                 </div>
                                 <!-- Bagian Output -->
                                 <div class="col-md-4">
-                                    <div class="isi",name='{{data["no_resi"]}}'>
+                                    <div class="isi">
                                         <p>Rp.{{data['ongkir']}}</p><!-- Output Disini -->
                                     </div>
                                 </div>
@@ -38,7 +38,7 @@
                                 </div>
                                 <!-- Bagian Form -->
                                 <div class="col-md-4">
-                                    {{form.username_d(class='form-control',id='username_d',onchange='checkUsername([id,value])')}}
+                                    {{form.username_d(class='form-control',id='username_d')}}
                                 </div>
                             </div>
 
@@ -52,7 +52,7 @@
                                 </div>
                                 <!-- Bagian Form -->
                                 <div class="col-md-4">
-                                    {{form.username_r(class='col-md-4 form-control',id = 'username_r',onchange='checkUsername([id,value])')}}
+                                    {{form.username_r(class='col-md-4 form-control',id = 'username_r')}}
                                 </div>
                             </div>
 
@@ -66,3 +66,41 @@
             </div>
         </section>
 {% endblock %}
+{% block script %}
+<script>
+$(document).ready(function() {
+    $('form').submit(function (e) {
+        e.preventDefault(); 
+        let url = "{{url_for('confirm_page')}}"; // send the form data here.
+        $.ajax({
+            type: "POST",
+            url: url,
+            data: $('form').serialize() + "&no_resi={{data['no_resi']}}", // serializes the form's elements.
+            success: function (data) {
+                toastr.success(data)
+                setTimeout(function(){
+                    window.location.replace('/admin_dashboard')
+                },1000)
+            },
+            error: function(xhr){
+                data = xhr.responseJSON
+                for (let i = 0; i < data.length; i++){
+                    toastr.error(data[i])
+                }
+            }
+        });
+        // block the traditional submission of the form.
+    });
+
+    // Inject our CSRF token into our AJAX request.
+    $.ajaxSetup({
+        beforeSend: function(xhr, settings) {
+            if (!/^(GET|HEAD|OPTIONS|TRACE)$/i.test(settings.type) && !this.crossDomain) {
+                xhr.setRequestHeader("X-CSRFToken", "{{ form.csrf_token._value() }}")
+            }
+        }
+    })
+});
+</script>
+{% endblock %}
+

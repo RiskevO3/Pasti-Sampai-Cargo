@@ -99,13 +99,16 @@ def dashboard_admin_page():
 @app.route('/confirm',methods=['GET','POST'])
 @login_required
 def confirm_page():
-    if 'data' in session:
-        form = addUsername()
-        data = request.args['data']
-        data = session['data']
-        data = json.loads(data)
+    form = addUsername()
+    if request.method =='GET':
+        if 'data' in session:
+            data = request.args['data']
+            data = session['data']
+            data = json.loads(data)
+            return render_template('confirm.html',data=data,form=form)
+    if request.method == 'POST':
         if form.validate_on_submit():
-            resi = search_noresi(data['no_resi'])
+            resi = search_noresi(int(form.no_resi.data))
             user_d = User.query.filter_by(username=form.username_d.data).first()
             user_r = User.query.filter_by(username=form.username_r.data).first()
             user_d.resi.append(resi)
@@ -113,11 +116,12 @@ def confirm_page():
             db.session.add_all([user_d,user_r])
             db.session.commit()
             del session['data']
-            flash(f'tambah resi dengan nomor {data["no_resi"]} sukses!',category='success')
+            return(f'tambah resi dengan nomor {form.no_resi.data} sukses!',200)
         if form.errors != {}:
+            l_err = []
             for err_msg in form.errors.values():
-                flash(f'There was an error with searching a resi: {err_msg}', category='danger')
-        return render_template('confirm.html',data=data,form=form)
+                l_err.append(f'There was an error with searching a resi: {err_msg}')
+            return (l_err,400)
     flash('you cant access this page directly!',category='danger')
     return redirect(url_for('home_page'))
 
