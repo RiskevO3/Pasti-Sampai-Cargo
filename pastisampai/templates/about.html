@@ -49,15 +49,9 @@
 {% endblock %}
 {% block script %}
 <script>
-    document.addEventListener("contextmenu", (e) => {
-    e.preventDefault();
-    }, false);
-    document.addEventListener("keydown", (e) => {
-    if (e.ctrlKey || e.keyCode==123) {
-    e.stopPropagation();
-    e.preventDefault();
-    }
-    });
+    const page = '{{url_for("about_page")}}'
+</script>
+<script>
     let scriptElement = document.createElement("script");
     scriptElement.type = "text/javascript";
     scriptElement.src = "{{url_for('static',filename='js/about.js')}}";

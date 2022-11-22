@@ -120,7 +120,7 @@ def confirm_page():
         if form.errors != {}:
             l_err = []
             for err_msg in form.errors.values():
-                l_err.append(f'There was an error with searching a resi: {err_msg}')
+                l_err.append(f'There was an error when adding a resi: {err_msg[0]}')
             return (l_err,400)
     flash('you cant access this page directly!',category='danger')
     return redirect(url_for('home_page'))
@@ -182,6 +182,6 @@ def cek_resi():
         resi = search_noresi(int(request.form.get('resi')))
         if not resi:
             return ('resi tidak terdaftar!',400)
-        return ('berhasil',200)
+        return ('resi yang anda masukkan terdaftar!',200)
     return 400
 

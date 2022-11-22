@@ -1,1 +1,52 @@
-var _0x5dba=["\x76\x61\x6C\x75\x65","\x72\x65\x73\x69","\x67\x65\x74\x45\x6C\x65\x6D\x65\x6E\x74\x42\x79\x49\x64","\x2F\x63\x65\x6B\x72\x65\x73\x69","\x73\x75\x62\x6D\x69\x74\x66\x6F\x72\x6D","\x50\x4F\x53\x54","\x63\x6C\x61\x73\x73","\x62\x75\x74\x74\x6F\x6E\x2D\x75\x70\x64\x61\x74\x65\x20\x6D\x74\x2D\x33","\x61\x74\x74\x72","\x23\x73\x75\x62\x6D\x69\x74\x66\x6F\x72\x6D","\x64\x69\x73\x61\x62\x6C\x65\x64","\x62\x75\x74\x74\x6F\x6E\x2D\x75\x70\x64\x61\x74\x65\x2D\x64\x69\x73\x61\x62\x6C\x65\x64\x20\x6D\x74\x2D\x33","\x72\x65\x73\x70\x6F\x6E\x73\x65\x54\x65\x78\x74","\x65\x72\x72\x6F\x72","\x61\x6A\x61\x78","\x70\x72\x65\x76\x65\x6E\x74\x44\x65\x66\x61\x75\x6C\x74","\x2F\x75\x70\x64\x61\x74\x65","\x73\x65\x72\x69\x61\x6C\x69\x7A\x65","\x66\x6F\x72\x6D","\x73\x75\x63\x63\x65\x73\x73","\x72\x65\x73\x70\x6F\x6E\x73\x65\x4A\x53\x4F\x4E","\x6C\x65\x6E\x67\x74\x68","\x73\x75\x62\x6D\x69\x74","\x74\x79\x70\x65","\x74\x65\x73\x74","\x63\x72\x6F\x73\x73\x44\x6F\x6D\x61\x69\x6E","\x58\x2D\x43\x53\x52\x46\x54\x6F\x6B\x65\x6E","\x7B\x7B\x20\x66\x6F\x72\x6D\x2E\x63\x73\x72\x66\x5F\x74\x6F\x6B\x65\x6E\x2E\x5F\x76\x61\x6C\x75\x65\x28\x29\x20\x7D\x7D","\x73\x65\x74\x52\x65\x71\x75\x65\x73\x74\x48\x65\x61\x64\x65\x72","\x61\x6A\x61\x78\x53\x65\x74\x75\x70","\x72\x65\x61\x64\x79"];function cekResi(){resi= parseInt(document[_0x5dba[2]](_0x5dba[1])[_0x5dba[0]]);let _0x5960x2=_0x5dba[3];submitform= document[_0x5dba[2]](_0x5dba[4]);$[_0x5dba[14]]({type:_0x5dba[5],url:_0x5960x2,data:{'\x72\x65\x73\x69':resi},success:function(){$(_0x5dba[9])[_0x5dba[8]](_0x5dba[6],_0x5dba[7]);submitform[_0x5dba[10]]= false},error:function(_0x5960x3){submitform[_0x5dba[10]]= true;$(_0x5dba[9])[_0x5dba[8]](_0x5dba[6],_0x5dba[11]);toastr[_0x5dba[13]](_0x5960x3[_0x5dba[12]])}})}$(document)[_0x5dba[30]](function(){$(_0x5dba[18])[_0x5dba[22]](function(_0x5960x4){_0x5960x4[_0x5dba[15]]();var _0x5960x2=_0x5dba[16];$[_0x5dba[14]]({type:_0x5dba[5],url:_0x5960x2,data:$(_0x5dba[18])[_0x5dba[17]](),success:function(_0x5960x5){toastr[_0x5dba[19]](_0x5960x5)},error:function(_0x5960x3){data= _0x5960x3[_0x5dba[20]];for(let _0x5960x6=0;_0x5960x6< data[_0x5dba[21]];_0x5960x6++){toastr[_0x5dba[13]](data[_0x5960x6])}}})});$[_0x5dba[29]]({beforeSend:function(_0x5960x3,_0x5960x7){if(!/^(GET|HEAD|OPTIONS|TRACE)$/i[_0x5dba[24]](_0x5960x7[_0x5dba[23]])&&  !this[_0x5dba[25]]){_0x5960x3[_0x5dba[28]](_0x5dba[26],_0x5dba[27])}}})})
+function cekResi(){
+    resi = parseInt(document.getElementById('resi').value)
+    let url = cekResiPage; // send the form data here.
+    submitform = document.getElementById('submitform')
+        $.ajax({
+            type: "POST",
+            url: url,
+            data: {'resi':resi},
+            success: function (data) {
+                submitform.disabled = false
+                $("#submitform").attr('class', 'button-update mt-3');
+                toastr.success(data)// display the returned data in the console.
+            },
+            error: function(xhr){
+                let data = xhr.responseText
+                $("#submitform").attr('class', 'button-update-disabled mt-3');
+                submitform.disabled = true
+                toastr.error(data)
+
+
+            }
+        });
+}
+$(document).ready(function() {
+    $('form').submit(function (e) {
+        let url = page; // send the form data here.
+        $.ajax({
+            type: "POST",
+            url: url,
+            data: $('form').serialize(), // serializes the form's elements.
+            success: function (data) {
+                toastr.success(data)
+            },
+            error: function(xhr){
+                data = xhr.responseJSON
+                for (let i = 0; i < data.length; i++){
+                    toastr.error(data[i])
+                }
+            }
+        });
+        e.preventDefault(); // block the traditional submission of the form.
+    });
+
+    // Inject our CSRF token into our AJAX request.
+    $.ajaxSetup({
+        beforeSend: function(xhr, settings) {
+            if (!/^(GET|HEAD|OPTIONS|TRACE)$/i.test(settings.type) && !this.crossDomain) {
+                xhr.setRequestHeader("X-CSRFToken", "{{ form.csrf_token._value() }}")
+            }
+        }
+    })
+});

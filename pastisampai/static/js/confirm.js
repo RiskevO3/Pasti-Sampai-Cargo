@@ -1,21 +1,25 @@
 $(document).ready(function() {
     $('form').submit(function (e) {
+        e.preventDefault(); 
         let url = page; // send the form data here.
         $.ajax({
             type: "POST",
             url: url,
-            data: $('form').serialize(), // serializes the form's elements.
+            data: $('form').serialize() + `&no_resi=${(no_resi)}`, // serializes the form's elements.
             success: function (data) {
-                trackingresult = document.getElementById('trackingresult')
-                if (data != 'noresi tidak ada!'){
-                    trackingresult.innerHTML = `${data['arrived_at']} | ${data['time_on_update']}`  // display the returned data in the console.
-                }
-                else {
-                    trackingresult.innerHTML = data
+                toastr.success(data)
+                setTimeout(function(){
+                    window.location.replace('/admin_dashboard')
+                },1000)
+            },
+            error: function(xhr){
+                data = xhr.responseJSON
+                for (let i = 0; i < data.length; i++){
+                    toastr.error(data[i])
                 }
             }
         });
-        e.preventDefault(); // block the traditional submission of the form.
+        // block the traditional submission of the form.
     });
 
     // Inject our CSRF token into our AJAX request.

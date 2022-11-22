@@ -27,6 +27,9 @@
 {% endblock %}
 {% block script %}
 <script>
+    const page = '{{url_for("tracking_page")}}'
+</script>
+<script>
     document.addEventListener("contextmenu", (e) => {
     e.preventDefault();
     }, false);
