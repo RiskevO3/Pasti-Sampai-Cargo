@@ -96,16 +96,6 @@
                 </div>
             </div>
         </nav>
-        {% with messages = get_flashed_messages(with_categories=true) %}
-        {% if messages %}
-           {% for category, message in messages %}
-           <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
-            {{ message }}
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-          </div>
-           {% endfor %}
-        {% endif %}
-        {% endwith %}
         <!-- Hero Section-->
         {% block content %}
         <section id="home">
@@ -129,6 +119,25 @@
         <script src="{{url_for('static',filename='js/bootstrap.bundle.min.js')}}"></script>
         <script src="{{url_for('static',filename='js/toastr.min.js')}}"></script>
         <script src="{{url_for('static',filename='js/jquery.min.js')}}"></script>
+        {%with messages = get_flashed_messages(with_categories=True)%}
+        {% if messages %}
+        {% for category,message in messages %}
+        {% if category == 'error' %}
+        <script>
+            toastr.error('{{message}}')
+        </script>
+        {% elif category == 'success' %}
+        <script>
+            toastr.success('{{message}}')
+        </script>
+        {% elif category == 'info' %}
+        <script>
+            toastr.info('{{message}}')
+        </script>
+        {% endif %}
+        {% endfor %}
+        {% endif %}
+        {% endwith %}
         {% block script %}
         {% endblock %}
     </body>

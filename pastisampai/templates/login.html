@@ -23,6 +23,7 @@
     const account_info = '{{url_for("account_info")}}'
 </script>
 <script>
+    console.log(document.URL)
     let scriptElement = document.createElement('script')
     scriptElement.type = 'text/javascript'
     scriptElement.src = '{{url_for("static",filename="js/login.js")}}'

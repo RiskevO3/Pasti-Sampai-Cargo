@@ -70,7 +70,7 @@ def account_info():
 @app.route('/logout')
 def logout_page():
     logout_user()
-    flash("You have been logged out!", category='info')
+    flash("You have been logged out!",category='info')
     return redirect(url_for("home_page"))
 
 
@@ -90,7 +90,7 @@ def dashboard_admin_page():
             session['data'] = data
             return redirect(url_for('confirm_page',data=data))
         return render_template('add.html',form=form)
-    flash('Youre not and admin!',category='danger')
+    flash('Youre not and admin!',category='error')
     return redirect(url_for('account_info'))
 
 @app.route('/confirm',methods=['GET','POST'])
@@ -119,7 +119,7 @@ def confirm_page():
             for err_msg in form.errors.values():
                 l_err.append(f'There was an error when adding a resi: {err_msg[0]}')
             return (l_err,400)
-    flash('you cant access this page directly!',category='danger')
+    flash('you cant access this page directly!',category='error')
     return redirect(url_for('home_page'))
 
 @app.route('/check_username',methods=['POST'])
@@ -151,7 +151,7 @@ def update_page():
                 l_err.append(f'There was an error with searching a resi: {err_msg}')
             return(l_err,400)
         return render_template('update.html',form=form)
-    flash('Youre not and admin!',category='danger')
+    flash('Youre not and admin!',category='error')
     return redirect(url_for('account_info'))
 
 
@@ -168,7 +168,7 @@ def tracking_page():
                 data = 'noresi tidak ada!'
             return (data,200)
         return render_template('tracking.html',form=form)
-    flash('Youre not and admin!',category='danger')
+    flash('Youre not and admin!',category='error')
     return redirect(url_for('account_info'))
 
 
