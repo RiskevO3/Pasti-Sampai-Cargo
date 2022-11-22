@@ -11,6 +11,9 @@ def load_user(user_id):
 
 user_resi = db.Table('user_resi',db.Column('user_id',db.Integer(),db.ForeignKey('user.id')),db.Column('resi_id',db.Integer(),db.ForeignKey('resi.id')))
 
+def search_noresi(no_resi):
+    return Resi.query.filter_by(no_resi=no_resi).first()
+
 def generate_resi():
     resis = Resi.query.all()
     resi_list = []

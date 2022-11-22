@@ -7,12 +7,10 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
         <!-- Bootstrap CSS -->
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+        <link rel="stylesheet" href="{{url_for('static',filename='css/bootstrap.min.css')}}">
+        <link rel="stylesheet" href="{{url_for('static',filename='css/toastr.min.css')}}">
         <!-- Font Google -->
-        <link rel="preconnect" href="https://fonts.googleapis.com">
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+        <link href="{{url_for('static',filename='css/fontgoogle.css')}}" rel="stylesheet">
 
         <!-- Style -->
         <link rel="stylesheet" href="{{ url_for('static',filename='css/style.css') }}">
@@ -23,7 +21,7 @@
         <!-- Title Bar -->
         <link rel="icon" href="{{ url_for('static',filename='Assets/img/Logo Small.png') }}" type="image/x-icon">
         <title>Pasti Sampai Express</title>
-        <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
+        <script src="{{url_for('static',filename='js/jquery-3.6.0.js')}}"></script>
     </head>
     
     <body>
@@ -128,11 +126,10 @@
         <script src="{{ url_for('static',filename='js/script.js') }}"></script>
         <!-- Optional JavaScript; choose one of the two! -->
         <!-- Option 1: Bootstrap Bundle with Popper -->
-        
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
-        <script src="https://code.jquery.com/jquery-3.6.1.min.js" integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js" integrity="sha512-aVKKRRi/Q/YV+4mjoKBsE4x3H+BkegoM/em46NNlCqNTmUYADjBbeNefNxYV7giUp0VxICtqdrbqU7iVaeZNXA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+        <script src="{{url_for('static',filename='js/bootstrap.bundle.min.js')}}"></script>
+        <script src="{{url_for('static',filename='js/toastr.min.js')}}"></script>
+        <script src="{{url_for('static',filename='js/jquery-3.6.0.min.js')}}"></script>
+        <script src="{{url_for('static',filename='js/jquery.min.js')}}"></script>
         {% block script %}
         {% endblock %}
     </body>

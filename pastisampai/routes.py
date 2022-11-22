@@ -1,6 +1,6 @@
 from flask import redirect, render_template,request,url_for,flash,session,jsonify
 from pastisampai import app,db
-from pastisampai.models import User,Resi,Kota,Kota_Ongkir,get_date,generate_resi
+from pastisampai.models import User,Resi,Kota,Kota_Ongkir,get_date,generate_resi,search_noresi
 from pastisampai.forms import RegisterForm,LoginForm,dropPointForm,checkResiForm,updateResiForm,addNewOrder,addUsername
 from flask_login import login_user,logout_user,login_required,current_user
 import json
@@ -105,7 +105,7 @@ def confirm_page():
         data = session['data']
         data = json.loads(data)
         if form.validate_on_submit():
-            resi = Resi.query.filter_by(no_resi=data['no_resi']).first()
+            resi = search_noresi(data['no_resi'])
             user_d = User.query.filter_by(username=form.username_d.data).first()
             user_r = User.query.filter_by(username=form.username_r.data).first()
             user_d.resi.append(resi)
@@ -139,7 +139,7 @@ def update_page():
     if current_user.roles == 'admin':
         form = updateResiForm()
         if form.validate_on_submit():
-            user = Resi.query.filter_by(no_resi=form.noresi.data).first()
+            user = search_noresi(form.noresi.data)
             user.time_on_update = form.tanggal.data
             user.arrived_at = form.arrived_at.data
             db.session.commit()
@@ -160,7 +160,7 @@ def tracking_page():
     if current_user.roles == 'admin':
         form = checkResiForm()
         if form.validate_on_submit():
-            noresi = Resi.query.filter_by(no_resi=form.noresi.data).first()
+            noresi = search_noresi(form.noresi.data)
             if noresi:
                 data = {'arrived_at':noresi.arrived_at,'time_on_update':noresi.time_on_update}
             else:
@@ -175,7 +175,7 @@ def tracking_page():
 @login_required
 def cek_resi():
     if current_user.roles == 'admin':
-        resi = Resi.query.filter_by(no_resi=int(request.form.get('resi'))).first()
+        resi = search_noresi(int(request.form.get('resi')))
         if not resi:
             return ('resi tidak terdaftar!',400)
         return ('berhasil',200)
