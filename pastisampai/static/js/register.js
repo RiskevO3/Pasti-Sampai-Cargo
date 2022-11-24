@@ -13,6 +13,7 @@ $(document).ready(function(){
                 },1500)
             },
             error: function(xhr){
+                console.log(xhr)
                 let data = xhr.responseJSON
                 for (let i = 0; i < data.length; i++){
                     toastr.error(data[i])

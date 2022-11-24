@@ -5,15 +5,45 @@ import json
 from datetime import date
 import random
 
+# load user info from database when user login
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
 
+# make relational many to many database for resi and user table
 user_resi = db.Table('user_resi',db.Column('user_id',db.Integer(),db.ForeignKey('user.id')),db.Column('resi_id',db.Integer(),db.ForeignKey('resi.id')))
 
+# function to create new user
+def create_user(username,fullname,email_address,password,roles):
+    userToCreate = User(username=username,fullname=fullname,email_address=email_address,password=password,roles=roles)
+    db.session.add(userToCreate)
+    db.session.commit()
+    return userToCreate
+
+def create_resi(sender_n,receiver_n,origin_n,destination_n,type_of_packet,type_of_service,sender_pn,receiver_pn,weight_packet,arrived_at,ongkir):
+    newResi = Resi(no_resi=generate_resi(),sender_n=sender_n,receiver_n=receiver_n,origin_n=origin_n,destination_n=destination_n,type_of_packet=type_of_packet,type_of_service=type_of_service,sender_pn=sender_pn,receiver_pn=receiver_pn,weight_packet=weight_packet,arrived_at=arrived_at,time_on_update=get_date(),time_on_deliver=get_date(),ongkir=ongkir)
+    db.session.add(newResi)
+    db.session.commit()
+    return newResi
+
+def create_ongkir(city_id,tujuan,berat):
+    kota = Kota_Ongkir.query.filter_by(city_id=city_id).first()
+    return kota.cekongkir(tujuan=tujuan,berat=berat)
+
+#function for search username
+def search_user(value):
+    if '@' in value:
+        return User.query.filter_by(email_address=value)
+    return User.query.filter_by(username=value).first()
+
+# function for search resi from Resi table
 def search_noresi(no_resi):
     return Resi.query.filter_by(no_resi=no_resi).first()
 
+def search_city(kabKotaName):
+    return Kota.query.filter(Kota.kabkota_name.like(kabKotaName)).all()
+
+# function for generate random resi
 def generate_resi():
     resis = Resi.query.all()
     resi_list = []
@@ -24,10 +54,12 @@ def generate_resi():
         if random_number not in resi_list:
             return random_number
 
+# function for get today date
 def get_date():
     today = date.today()
     return today.strftime("%d/%m/%Y")
 
+# function for get Kota_Ongkir table database for api ongkir purposes
 def get_city():
     city = Kota_Ongkir.query.all()
     list_city = []
@@ -36,6 +68,7 @@ def get_city():
         list_city.append((kota.city_id,kota.city_name))
     return list_city
 
+# class User model for database table
 class User(db.Model, UserMixin):
     id = db.Column(db.Integer(), primary_key=True)
     roles = db.Column(db.String(length=30),nullable=False)
@@ -45,14 +78,15 @@ class User(db.Model, UserMixin):
     password_hash = db.Column(db.String(length=60), nullable=False)
     resi = db.relationship('Resi',secondary=user_resi,backref='users')
     @property
-    def password(self):
+    def password(self): 
         return self.password
     @password.setter
-    def password(self, plain_text_password):
+    def password(self, plain_text_password): #function to encrypt password when user register on this websites
         self.password_hash = bcrypt.generate_password_hash(plain_text_password).decode('utf-8')
-    def check_password_correction(self, attempted_password):
+    def check_password_correction(self, attempted_password): #function to check password when user try to login.
         return bcrypt.check_password_hash(self.password_hash, attempted_password)
 
+# class Resi model for database table
 class Resi(db.Model):
     id = db.Column(db.Integer(),primary_key=True)
     no_resi = db.Column(db.Integer(),nullable=False)
@@ -70,21 +104,22 @@ class Resi(db.Model):
     time_on_deliver = db.Column(db.String(length=60),nullable=False)
     ongkir = db.Column(db.String(length=30),nullable=False)
 
+# class Kota model for database table
 class Kota(db.Model):
     id = db.Column(db.Integer(),primary_key=True)
     cabang_name = db.Column(db.String(length=30),nullable=False)
     kabkota_name = db.Column(db.String(length=30),nullable=False)
     address = db.Column(db.String(length=60),nullable=False)
     kodePos = db.Column(db.String(length=30),nullable=False)
-    def to_dict(self):
+    def to_dict(self): #function to return all of the kota model to dictionary
         return {'address':self.address,'kabkota_name':self.kabkota_name,'kodePos':self.kodePos,'cabang_name':self.cabang_name}
 
-
+# class Kota_Ongkir model for database table
 class Kota_Ongkir(db.Model):
     id =db.Column(db.Integer(),primary_key=True)
     city_id = db.Column(db.String(length=30),nullable=False)
     city_name = db.Column(db.String(length=30),nullable=False)
-    def cekongkir(self,tujuan,berat):
+    def cekongkir(self,tujuan,berat): #cek ongkir function
         berat = berat * 1000
         conn = http.client.HTTPSConnection("api.rajaongkir.com")
         payload = f"origin={self.city_id}&destination={tujuan}&weight={berat}&courier=jne"
