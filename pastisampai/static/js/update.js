@@ -29,6 +29,7 @@ $(document).ready(function() {
             url: url,
             data: $('form').serialize(), // serializes the form's elements.
             success: function (data) {
+                document.getElementById("form").reset();
                 toastr.success(data)
             },
             error: function(xhr){

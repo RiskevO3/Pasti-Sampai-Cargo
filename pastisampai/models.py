@@ -56,7 +56,7 @@ def create_error_messages(errors_messages,category):
             flash(f'Ada kesalahan ketika membuat akun: {err_msg[0]}')
  
 def add_user_to_resi(resi,username_d,username_r):
-    resi = search_noresi(int(resi))
+    resi = Resi.query.filter_by(no_resi=int(resi)).first()
     user_d,user_r = search_user(username_d),search_user(username_r)
     user_d.resi.append(resi)
     user_r.resi.append(resi)
@@ -64,9 +64,9 @@ def add_user_to_resi(resi,username_d,username_r):
     db.session.commit()
 
 def update_resi(no_resi,tanggal,arrived_at):
-    user = search_noresi(no_resi)
-    user.time_on_update = tanggal
-    user.arrived_at = arrived_at
+    resi = Resi.query.filter_by(no_resi=no_resi).first()
+    resi.time_on_update = tanggal
+    resi.arrived_at = arrived_at
     db.session.commit()
     return (f'success,update pada no resi {no_resi} berhasil!',200)
 
@@ -200,7 +200,7 @@ class Kota_Ongkir(db.Model):
         data = json.loads(data.decode("utf-8"))
         print(tujuan)
         print(data)
-        if not data['rajaongkir']['results'][0]['costs']:
+        if data['rajaongkir']['results'][0]['costs']:
             data = data['rajaongkir']['results'][0]['costs'][0]['cost'][0]['value']
             return data
         return 10000*(berat/1000)

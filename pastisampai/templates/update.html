@@ -9,7 +9,7 @@
                 <p>Isi form dibawah dengan benar!</p>
 
                 <!-- Bagian Utama -->
-                <form method="POST">
+                <form id='form' method="POST">
                     <!-- Input No Resi -->
                     {{form.hidden_tag()}}
                     {{form.noresi(onchange="cekResi()",class='form-control input-update mt-3',placeholder='No Resi',id='resi')}}

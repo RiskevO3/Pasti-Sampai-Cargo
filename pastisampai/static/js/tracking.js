@@ -8,9 +8,11 @@ $(document).ready(function() {
             success: function (data) {
                 trackingresult = document.getElementById('trackingresult')
                 if (data != 'noresi tidak ada!'){
+                    document.getElementById("form").reset();
                     trackingresult.innerHTML = `${data['arrived_at']} | ${data['time_on_update']}`  // display the returned data in the console.
                 }
                 else {
+                    document.getElementById("form").reset();
                     trackingresult.innerHTML = data
                 }
             }
