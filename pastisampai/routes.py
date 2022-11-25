@@ -1,163 +1,147 @@
-from flask import redirect, render_template,request,url_for,flash,session,jsonify
+from flask import redirect, render_template,request,url_for,flash,session
 from pastisampai import app,db
-from pastisampai.models import search_noresi,search_user,search_city,create_user,create_resi,create_ongkir
+from pastisampai.models import search_noresi,search_city,create_user,add_user_to_resi,validate_login,create_error_messages,update_resi,track_resi,check_user,create_new_order
 from pastisampai.forms import RegisterForm,LoginForm,dropPointForm,checkResiForm,updateResiForm,addNewOrder,addUsername
-from flask_login import login_user,logout_user,login_required,current_user
+from flask_login import logout_user,login_required,current_user
 import json
 
-@app.route('/',methods = ["GET","POST"])
+
+@app.errorhandler(404)
+def page_not_found(e):
+    flash('this page is doesnt exist!',category='error')
+    return redirect(session['url'])
+
+
+@app.route('/',methods = ["GET"])
 def home_page():
     if request.method == "GET":
+        session['url'] = url_for('home_page')
         return render_template('index.html')
 
 @app.route('/about',methods = ["GET","POST"])
 def about_page():
+    session['url'] = url_for('about_page')
     form = dropPointForm()
     if form.validate_on_submit():
-        city = search_city(kabKotaName=f'%{form.searchCity.data}%')
-        if city:
-            l_city = []
-            for citie in city:
-                l_city.append(citie.to_dict())
-            return (l_city,200)
-        return ('Kota yang anda cari tidak ada!',400)
+        return search_city(kabKotaName=f'%{form.searchCity.data}%')
     return render_template('about.html',form=form)
 
-@app.route('/services',methods = ["GET","POST"])
+@app.route('/services',methods = ["GET"])
 def service_page():
+    session['url'] = url_for('service_page')
     return render_template('service.html')
 
 @app.route('/login',methods = ["GET","POST"])
 def login_page():
     if not current_user.is_authenticated:
+        session['url'] = url_for('login_page')
         form = LoginForm()
         if form.validate_on_submit():
-            attemptedUser = search_user(form.username.data)
-            if attemptedUser and attemptedUser.check_password_correction(attempted_password=form.password.data):
-                login_user(attemptedUser)
-                return(f"Success! sekarang kamu login sebagai {attemptedUser.username}", 200)
-            return('Username atau password salah!, harap coba kembali', 400)
+            return validate_login(username=form.username.data,password=form.password.data)
         return render_template('login.html',form=form)
     flash(f'You have been signed in as {current_user.username}',category='info')
-    return redirect(url_for('account_info'))
+    return redirect(session['url'])
 
 @app.route('/register',methods = ["GET","POST"])
 def register_page():
-    form = RegisterForm()
-    if form.validate_on_submit():
-        userToCreate = create_user(username=form.username.data,fullname=form.fullname.data,email_address=form.email.data,password=form.password.data,roles='user')
-        login_user(userToCreate)
-        return(f"Akun berhasil dibuat! sekarang kamu login sebagai {userToCreate.username}", 200)
-    if form.errors != {}: #If there are not errors from the validations
-        l_err = []
-        for err_msg in form.errors.values():
-            l_err.append(f'Ada kesalahan ketika membuat akun: {err_msg[0]}')
-        return (l_err,400)
-    return render_template('register.html',form=form)
+    if not current_user.is_authenticated:
+        session['url'] = url_for('register_page')
+        form = RegisterForm()
+        if form.validate_on_submit():
+            return create_user(username=form.username.data,fullname=form.fullname.data,email_address=form.email.data,password=form.password.data,roles='user')
+        if form.errors != {}: #If there are not errors from the validations
+            return create_error_messages(form.errors.values(),'ajax')
+        return render_template('register.html',form=form)
+    flash(f'You have been signed in as {current_user.username}',category='info')
+    return redirect(session['url'])
 
 
 @app.route('/account_info',methods=["GET","POST"])
 @login_required
 def account_info():
+    session['url'] = url_for('account_info')
     return render_template('account_info.html')
 
 @app.route('/dashboard',methods=["GET","POST"])
 @login_required
-def dashboard_page():# counterpart for session
-    user = current_user.resi
-    return render_template("dashboard.html",resis=user)
+def dashboard_page():
+    if not current_user.roles == 'admin':
+        session['url'] = url_for('dashboard_page')
+        user = current_user.resi
+        return render_template("dashboard.html",resis=user)
+    flash('admin cant access those pages!',category='error')
+    return redirect(session['url'])
 
 @app.route('/admin_dashboard',methods=['GET','POST'])
 @login_required
 def dashboard_admin_page():
     if current_user.roles == 'admin':
+        session['url'] = url_for('dashboard_admin_page')
         form = addNewOrder()
         if form.validate_on_submit():
-            ongkir = create_ongkir(city_id=form.kota_asal.data,tujuan=form.kota_tujuan.data,berat=int(form.weight_packet.data))
-            newResi = create_resi(sender_n=form.sender_n.data,receiver_n=form.receiver_n.data,origin_n=form.origin_n.data,destination_n=form.destination_n.data,type_of_packet=form.type_of_packet.data,type_of_service=form.type_of_service.data,sender_pn=form.sender_pn.data,receiver_pn=form.receiver_pn.data,weight_packet=form.weight_packet.data,arrived_at=form.origin_n.data,ongkir=ongkir)
-            data = json.dumps({'no_resi':newResi.no_resi,'ongkir':ongkir})
+            data = create_new_order(city_id=form.kota_asal.data,tujuan=form.kota_tujuan.data,berat=int(form.weight_packet.data),sender_n=form.sender_n.data,receiver_n=form.receiver_n.data,origin_n=form.origin_n.data,destination_n=form.destination_n.data,type_of_packet=form.type_of_packet.data,type_of_service=form.type_of_service.data,sender_pn=form.sender_pn.data,receiver_pn=form.receiver_pn.data,weight_packet=form.weight_packet.data,arrived_at=form.origin_n.data)
             session['data'] = data
             return redirect(url_for('confirm_page',data=data))
+        if form.errors != {}:
+            create_error_messages(form.errors.values(),'flash')
         return render_template('add.html',form=form)
     flash('Youre not and admin!',category='error')
-    return redirect(url_for('account_info'))
+    return redirect(session['url'])
 
 @app.route('/confirm',methods=['GET','POST'])
-
 @login_required
 def confirm_page():
     form = addUsername()
     if request.method =='GET':
         if 'data' in session:
-            data = request.args['data']
+            session['url'] = url_for('confirm_page')
             data = session['data']
             data = json.loads(data)
             return render_template('confirm.html',data=data,form=form)
     if request.method == 'POST':
         if form.validate_on_submit():
-            resi = search_noresi(int(form.no_resi.data))
-            user_d,user_r = search_user(form.username_d.data),search_user(form.username_r.data)
-            user_d.resi.append(resi)
-            user_r.resi.append(resi)
-            db.session.add_all([user_d,user_r])
-            db.session.commit()
+            add_user_to_resi(resi=form.no_resi.data,username_d=form.username_d.data,username_r=form.username_r.data)
             del session['data']
             return(f'tambah resi dengan nomor {form.no_resi.data} sukses!',200)
         if form.errors != {}:
-            l_err = []
-            for err_msg in form.errors.values():
-                l_err.append(f'There was an error when adding a resi: {err_msg[0]}')
-            return (l_err,400)
+            return create_error_messages(form.errors.values(),'ajax')
     flash('you cant access this page directly!',category='error')
-    return redirect(url_for('home_page'))
+    return redirect(session['url'])
 
 # routes for update resi from database
 @app.route('/update',methods=['POST','GET'])
 @login_required
 def update_page():
     if current_user.roles == 'admin':
+        session['url'] = url_for('update_page')
         form = updateResiForm()
         if form.validate_on_submit():
-            user = search_noresi(form.noresi.data)
-            user.time_on_update = form.tanggal.data
-            user.arrived_at = form.arrived_at.data
-            db.session.commit()
-            return (f'success,update pada no resi {form.noresi.data} berhasil!',200)
+            return update_resi(no_resi=form.noresi.data,tanggal=form.tanggal.data,arrived_at=form.arrived_at.data)
         if form.errors != {}:
-            l_err = []
-            for err_msg in form.errors.values():
-                l_err.append(f'There was an error with searching a resi: {err_msg[0]}')
-            return(l_err,400)
+            return create_error_messages(form.errors.values(),'ajax')
         return render_template('update.html',form=form)
     flash('Youre not and admin!',category='error')
-    return redirect(url_for('account_info'))
+    return redirect(session['url'])
 
 # routes for tracking from database
 @app.route('/tracking',methods = ["GET","POST"])
 @login_required
 def tracking_page():
     if current_user.roles == 'admin':
+        session['url'] = url_for('tracking_page')
         form = checkResiForm()
         if form.validate_on_submit():
-            noresi = search_noresi(form.noresi.data)
-            if noresi:
-                data = {'arrived_at':noresi.arrived_at,'time_on_update':noresi.time_on_update}
-            else:
-                data = 'noresi tidak ada!'
-            return (data,200)
+            return track_resi(no_resi=form.noresi.data)
         return render_template('tracking.html',form=form)
     flash('Youre not and admin!',category='error')
-    return redirect(url_for('account_info'))
+    return redirect(session['url'])
 
 # routes for check no_resi from database
 @app.route('/cekresi',methods=['POST'])
 @login_required
 def cek_resi():
     if current_user.roles == 'admin':
-        resi = search_noresi(int(request.form.get('resi')))
-        if not resi:
-            return ('resi tidak terdaftar!',400)
-        return ('resi yang anda masukkan terdaftar!',200)
+        return search_noresi(int(request.form.get('resi')))
     return 400
 
 # routes for check username on database
@@ -165,18 +149,11 @@ def cek_resi():
 @login_required
 def check_username():
     if current_user.roles == 'admin':
-        username = search_user(request.form.get('username'))
-        if not username:
-            username_type = request.form.get('type_username')
-            if username_type == 'username_d':
-                return (f'username untuk pengirim tidak ada!',400)
-            return(f'username untuk penerima tidak ada!',400)
-        return ('username terdaftar!',200)
-
+        return check_user(username=request.form.get('username'),user_type=request.form.get('type_username'))
+    
 # logout routes to logout user
-@app.route('/logout')
+@app.route('/logout',methods=['POST'])
 def logout_page():
     logout_user()
-    flash("You have been logged out!",category='info')
-    return redirect(url_for("home_page"))
+    return({"messages":"You have been logged out!","url":url_for('home_page')},200)
 

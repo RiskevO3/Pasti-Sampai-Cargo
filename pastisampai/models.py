@@ -1,5 +1,6 @@
+from flask import flash
 from pastisampai import db,bcrypt,login_manager
-from flask_login import UserMixin
+from flask_login import UserMixin,login_user
 import http.client
 import json
 from datetime import date
@@ -13,12 +14,21 @@ def load_user(user_id):
 # make relational many to many database for resi and user table
 user_resi = db.Table('user_resi',db.Column('user_id',db.Integer(),db.ForeignKey('user.id')),db.Column('resi_id',db.Integer(),db.ForeignKey('resi.id')))
 
+def validate_login(username,password):
+    attemptedUser = search_user(username)
+    if attemptedUser and attemptedUser.check_password_correction(attempted_password=password):
+        login_user(attemptedUser)
+        return(f"Success! sekarang kamu login sebagai {attemptedUser.username}", 200)
+    return('Username atau password salah!, harap coba kembali', 400)
+
+
 # function to create new user
 def create_user(username,fullname,email_address,password,roles):
     userToCreate = User(username=username,fullname=fullname,email_address=email_address,password=password,roles=roles)
     db.session.add(userToCreate)
     db.session.commit()
-    return userToCreate
+    login_user(userToCreate)
+    return(f"Akun berhasil dibuat! sekarang kamu login sebagai {userToCreate.username}", 200)
 
 def create_resi(sender_n,receiver_n,origin_n,destination_n,type_of_packet,type_of_service,sender_pn,receiver_pn,weight_packet,arrived_at,ongkir):
     newResi = Resi(no_resi=generate_resi(),sender_n=sender_n,receiver_n=receiver_n,origin_n=origin_n,destination_n=destination_n,type_of_packet=type_of_packet,type_of_service=type_of_service,sender_pn=sender_pn,receiver_pn=receiver_pn,weight_packet=weight_packet,arrived_at=arrived_at,time_on_update=get_date(),time_on_deliver=get_date(),ongkir=ongkir)
@@ -26,22 +36,78 @@ def create_resi(sender_n,receiver_n,origin_n,destination_n,type_of_packet,type_o
     db.session.commit()
     return newResi
 
+def create_new_order(sender_n,receiver_n,origin_n,destination_n,type_of_packet,type_of_service,sender_pn,receiver_pn,weight_packet,arrived_at,city_id,tujuan,berat):
+    ongkir = create_ongkir(city_id,tujuan,berat)
+    newResi = create_resi(sender_n,receiver_n,origin_n,destination_n,type_of_packet,type_of_service,sender_pn,receiver_pn,weight_packet,arrived_at,ongkir)
+    return json.dumps({'no_resi':newResi.no_resi,'ongkir':ongkir})
+
 def create_ongkir(city_id,tujuan,berat):
     kota = Kota_Ongkir.query.filter_by(city_id=city_id).first()
     return kota.cekongkir(tujuan=tujuan,berat=berat)
 
+def create_error_messages(errors_messages,category):
+    if category == 'ajax':
+        l_err = []
+        for err_msg in errors_messages:
+            l_err.append(f'Ada kesalahan ketika membuat akun: {err_msg[0]}')
+        return (l_err,400)
+    elif category == 'flash':
+        for err_msg in errors_messages:
+            flash(f'Ada kesalahan ketika membuat akun: {err_msg[0]}')
+ 
+def add_user_to_resi(resi,username_d,username_r):
+    resi = search_noresi(int(resi))
+    user_d,user_r = search_user(username_d),search_user(username_r)
+    user_d.resi.append(resi)
+    user_r.resi.append(resi)
+    db.session.add_all([user_d,user_r])
+    db.session.commit()
+
+def update_resi(no_resi,tanggal,arrived_at):
+    user = search_noresi(no_resi)
+    user.time_on_update = tanggal
+    user.arrived_at = arrived_at
+    db.session.commit()
+    return (f'success,update pada no resi {no_resi} berhasil!',200)
+
 #function for search username
 def search_user(value):
     if '@' in value:
-        return User.query.filter_by(email_address=value)
+        return User.query.filter_by(email_address=value).first()
     return User.query.filter_by(username=value).first()
+
+def check_user(username,user_type):
+    username = search_user(username)
+    if not username:
+        username_type = user_type
+        if username_type == 'username_d':
+            return (f'username untuk pengirim tidak ada!',400)
+        return(f'username untuk penerima tidak ada!',400)
+    return ('username terdaftar!',200)
 
 # function for search resi from Resi table
 def search_noresi(no_resi):
-    return Resi.query.filter_by(no_resi=no_resi).first()
+    resi = Resi.query.filter_by(no_resi=no_resi).first()
+    if not resi:
+        return ('resi tidak terdaftar!',400)
+    return ('resi yang anda masukkan terdaftar!',200)
 
 def search_city(kabKotaName):
-    return Kota.query.filter(Kota.kabkota_name.like(kabKotaName)).all()
+    city = Kota.query.filter(Kota.kabkota_name.like(kabKotaName)).all()
+    if city:
+        l_city = []
+        for citie in city:
+            l_city.append(citie.to_dict())
+        return (l_city,200)
+    return ('Kota yang anda cari tidak ada!',400)
+
+def track_resi(no_resi):
+    noresi = search_noresi(no_resi)
+    if noresi:
+        data = {'arrived_at':noresi.arrived_at,'time_on_update':noresi.time_on_update}
+    else:
+        data = 'noresi tidak ada!'
+    return (data,200)
 
 # function for generate random resi
 def generate_resi():
@@ -63,7 +129,7 @@ def get_date():
 def get_city():
     city = Kota_Ongkir.query.all()
     list_city = []
-    list_city.append(('0','Pilih Kota'))
+    list_city.append(('default','Pilih Kota'))
     for kota in city:
         list_city.append((kota.city_id,kota.city_name))
     return list_city
@@ -131,7 +197,9 @@ class Kota_Ongkir(db.Model):
         res = conn.getresponse()
         data = res.read()
         data = json.loads(data.decode("utf-8"))
-        if data['rajaongkir']['results'][0]['costs'] != []:
+        print(tujuan)
+        print(data)
+        if not data['rajaongkir']['results'][0]['costs']:
             data = data['rajaongkir']['results'][0]['costs'][0]['cost'][0]['value']
             return data
         return 10000*(berat/1000)

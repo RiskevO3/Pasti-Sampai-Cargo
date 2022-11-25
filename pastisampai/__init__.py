@@ -9,6 +9,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///pastisampai.db' # database co
 app.config['SECRET_KEY'] = '749a680b784380e5dbffae5c' #configuration secret key for flask can run
 db = SQLAlchemy(app) #initiation database to ap
 login_manager = LoginManager(app) #initiation login manager feature from flask to app
+login_manager.login_message = 'Harap login untuk melihat direktori ini!'
 login_manager.login_view = "login_page" #redirect login if there is someone want access login required page
 login_manager.login_message_category = "info" #flash popup category for login required directory
 

@@ -28,6 +28,12 @@ class LoginForm(FlaskForm):
     submit = SubmitField(label='Login')
 
 class addNewOrder(FlaskForm):
+    def validate_kota_asal(self,kota_asal_to_check):
+        if kota_asal_to_check.data == 'default':
+            raise ValidationError('Kota asal harus diisi!')
+    def validate_kota_tujuan(self,kota_tujuan_to_check):
+        if kota_tujuan_to_check.data == 'default':
+            raise ValidationError('Kota tujuan harus diisi!')
     sender_n = StringField(label = 'Nama Pengirim',validators=[DataRequired()])
     receiver_n = StringField(label = 'Nama Penerima',validators=[DataRequired()])
     origin_n = StringField(label = 'Alamat Asal',validators=[DataRequired()])

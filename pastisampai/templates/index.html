@@ -79,17 +79,13 @@
                                 <img src="{{ url_for('static',filename='Assets/img/user.png') }}" alt="">
                                 {{current_user.username}}</a>
                         </button>
-                        <button class="button-secondary">
-                            <a href="{{ url_for('logout_page') }}">LOGOUT</a>
-                        </button>
+                        <input class="btn button-secondary" type='button' id='logout' value='logout'>
                         {% else %}
                         <!--  -->
                         <button class="button-primary">
                             <a href="{{ url_for('register_page')}}">REGISTER</a>
                         </button>
-                        <button class="button-secondary">
-                            <a href="{{ url_for('login_page')}}">LOGIN</a>
-                        </button>
+                            <a href="{{ url_for('login_page')}}" class="btn button-secondary">LOGIN</a>
                         <!--  -->
                         {% endif %}
                     </div>
@@ -105,9 +101,9 @@
                         <h1>Mau Kirim Paket?</h1>
                         <h1>Pilih Yang Pasti - Pasti Aja!</h1>
                         <p><span class="fw-bold">Pasti Sampai Cargo</span> hadir untuk memudahkan anda dalam mengirimkan paket ke seluruh wilayah pulau Jawa dengan cepat dan tentunya pasti sampai!</p>
-                        <button class="button-lg-primary">
-                            <a href="{{ url_for('about_page')}}">Drop Point Terdekat</a>
-                        </button>
+                        <a href="{{ url_for('about_page')}}">
+                            <input type="button" class="btn button-lg-primary" value="Drop Point Terdekat">
+                        </a>
                     </div>
                 </div>
             </div>
@@ -117,7 +113,9 @@
         <script src="{{url_for('static',filename='js/bootstrap.bundle.min.js')}}"></script>
         <script src="{{url_for('static',filename='js/toastr.min.js')}}"></script>
         <script src="{{url_for('static',filename='js/jquery.min.js')}}"></script>
-        <script></script>
+        {% if current_user.is_authenticated %}
+        <script src="{{url_for('static',filename='js/logout.js')}}"></script>
+        {% endif %}
         {%with messages = get_flashed_messages(with_categories=True)%}
         {% if messages %}
         {% for category,message in messages %}
