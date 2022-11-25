@@ -102,7 +102,8 @@ def search_city(kabKotaName):
     return ('Kota yang anda cari tidak ada!',400)
 
 def track_resi(no_resi):
-    noresi = search_noresi(no_resi)
+    noresi = Resi.query.filter_by(no_resi=no_resi).first()
+    print(noresi)
     if noresi:
         data = {'arrived_at':noresi.arrived_at,'time_on_update':noresi.time_on_update}
     else:
