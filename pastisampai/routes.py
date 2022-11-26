@@ -9,7 +9,9 @@ import json
 @app.errorhandler(404)
 def page_not_found(e):
     flash('this page is doesnt exist!',category='error')
-    return redirect(session['url'])
+    if 'url' in session:
+        return redirect(session['url'])
+    return redirect(url_for('home_page'))
 
 
 @app.route('/',methods = ["GET"])
@@ -40,7 +42,9 @@ def login_page():
             return validate_login(username=form.username.data,password=form.password.data)
         return render_template('login.html',form=form)
     flash(f'You have been signed in as {current_user.username}',category='info')
-    return redirect(session['url'])
+    if 'url' in session:
+        return redirect(session['url'])
+    return redirect(url_for('home_page'))
 
 @app.route('/register',methods = ["GET","POST"])
 def register_page():
@@ -53,7 +57,9 @@ def register_page():
             return create_error_messages(form.errors.values(),'ajax')
         return render_template('register.html',form=form)
     flash(f'You have been signed in as {current_user.username}',category='info')
-    return redirect(session['url'])
+    if 'url' in session:
+        return redirect(session['url'])
+    return redirect(url_for('home_page'))
 
 
 @app.route('/account_info',methods=["GET","POST"])
@@ -70,7 +76,9 @@ def dashboard_page():
         user = current_user.resi
         return render_template("dashboard.html",resis=user)
     flash('admin cant access those pages!',category='error')
-    return redirect(session['url'])
+    if 'url' in session:
+        return redirect(session['url'])
+    return redirect(url_for('home_page'))
 
 @app.route('/admin_dashboard',methods=['GET','POST'])
 @login_required
@@ -86,7 +94,9 @@ def dashboard_admin_page():
             create_error_messages(form.errors.values(),'flash')
         return render_template('add.html',form=form)
     flash('Youre not and admin!',category='error')
-    return redirect(session['url'])
+    if 'url' in session:
+        return redirect(session['url'])
+    return redirect(url_for('home_page'))
 
 @app.route('/confirm',methods=['GET','POST'])
 @login_required
@@ -105,8 +115,9 @@ def confirm_page():
             return(f'tambah resi dengan nomor {form.no_resi.data} sukses!',200)
         if form.errors != {}:
             return create_error_messages(form.errors.values(),'ajax')
-    flash('you cant access this page directly!',category='error')
-    return redirect(session['url'])
+    if 'url' in session:
+        return redirect(session['url'])
+    return redirect(url_for('home_page'))
 
 # routes for update resi from database
 @app.route('/update',methods=['POST','GET'])
@@ -121,7 +132,9 @@ def update_page():
             return create_error_messages(form.errors.values(),'ajax')
         return render_template('update.html',form=form)
     flash('Youre not and admin!',category='error')
-    return redirect(session['url'])
+    if 'url' in session:
+        return redirect(session['url'])
+    return redirect(url_for('home_page'))
 
 # routes for tracking from database
 @app.route('/tracking',methods = ["GET","POST"])
@@ -134,7 +147,9 @@ def tracking_page():
             return track_resi(no_resi=form.noresi.data)
         return render_template('tracking.html',form=form)
     flash('Youre not and admin!',category='error')
-    return redirect(session['url'])
+    if 'url' in session:
+        return redirect(session['url'])
+    return redirect(url_for('home_page'))
 
 # routes for check no_resi from database
 @app.route('/cekresi',methods=['POST'])

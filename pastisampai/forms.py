@@ -17,9 +17,9 @@ class RegisterForm(FlaskForm):
         if user:
             raise ValidationError('Email already exists! Please try a different Email')
     fullname = StringField(label='full name',validators=[Length(min=2, max=30), DataRequired()])
-    username = StringField(label = 'username',validators=[Length(min=2),DataRequired()])
+    username = StringField(label = 'username',validators=[Length(min=2,max=30),DataRequired()])
     email = StringField(label = "email",validators=[Email(),DataRequired()])
-    password = PasswordField(label = 'Password',validators = [Length(min=2),DataRequired()])
+    password = PasswordField(label = 'Password',validators = [Length(min=2,max=30),DataRequired()])
     submit = SubmitField(label="register")
 
 class LoginForm(FlaskForm):
@@ -34,14 +34,14 @@ class addNewOrder(FlaskForm):
     def validate_kota_tujuan(self,kota_tujuan_to_check):
         if kota_tujuan_to_check.data == 'default':
             raise ValidationError('Kota tujuan harus diisi!')
-    sender_n = StringField(label = 'Nama Pengirim',validators=[DataRequired()])
-    receiver_n = StringField(label = 'Nama Penerima',validators=[DataRequired()])
-    origin_n = StringField(label = 'Alamat Asal',validators=[DataRequired()])
-    type_of_packet = StringField(label = 'Tipe Paket',validators=[DataRequired()])
+    sender_n = StringField(label = 'Nama Pengirim',validators=[DataRequired(),Length(max=30)])
+    receiver_n = StringField(label = 'Nama Penerima',validators=[DataRequired(),Length(max=30)])
+    origin_n = StringField(label = 'Alamat Asal',validators=[DataRequired(),Length(max=30)])
+    type_of_packet = StringField(label = 'Tipe Paket',validators=[DataRequired(),Length(max=30)])
     type_of_service = SelectField(choices=['Jenis Layanan','Reguler','Ekonomi','Kargo'])
     sender_pn = IntegerField(validators=[DataRequired()])
     receiver_pn = IntegerField(validators=[DataRequired()])
-    destination_n = StringField(label = 'Alamat Penerima',validators=[DataRequired()])
+    destination_n = StringField(label = 'Alamat Penerima',validators=[DataRequired(),Length(max=30)])
     weight_packet = StringField(validators=[DataRequired()])
     kota_asal = SelectField(label='Kota Asal',choices = get_city())
     kota_tujuan = SelectField(label='Kota Asal',choices = get_city())
@@ -56,8 +56,8 @@ class addUsername(FlaskForm):
         username = search_user(username_d_to_check.data)
         if not username:
             raise ValidationError('Username of deliver doesnt exists!')
-    username_r = StringField(label = 'Nama Penerima',validators=[DataRequired()])
-    username_d = StringField(label = 'Nama Pengirim',validators=[DataRequired()])
+    username_r = StringField(label = 'Nama Penerima',validators=[DataRequired(),Length(max=30)])
+    username_d = StringField(label = 'Nama Pengirim',validators=[DataRequired(),Length(max=30)])
     no_resi = IntegerField()
     submit = SubmitField()
 
@@ -67,12 +67,12 @@ class updateResiForm(FlaskForm):
         if not noresi:
             raise ValidationError('No resi yang anda masukkan salah!')
     noresi = IntegerField(label='No Resi',validators=[DataRequired()])
-    tanggal = StringField(label = 'Tanggal',validators=[DataRequired()])
-    arrived_at = StringField(label='Lokasi Terkini',validators=[DataRequired()])
+    tanggal = StringField(label = 'Tanggal',validators=[DataRequired(),Length(max=30)])
+    arrived_at = StringField(label='Lokasi Terkini',validators=[DataRequired(),Length(max=30)])
     submit= SubmitField()
 
 class dropPointForm(FlaskForm):
-    searchCity = StringField(label='Masukkan nama kota',validators=[DataRequired()])
+    searchCity = StringField(label='Masukkan nama kota',validators=[DataRequired(),Length(max=30)])
     submit = SubmitField()
 
 class checkResiForm(FlaskForm):
